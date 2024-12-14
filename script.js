@@ -1,43 +1,66 @@
+// Get elements
 const textDisplay = document.getElementById('text-display');
 const inputText = document.getElementById('input-text');
-const status = document.getElementById('status');
+const submitButton = document.getElementById('submit-button');
+const feedback = document.getElementById('feedback');
 
-// List of words to use for random word generation
+// List of computer science-related words
 const words = [
-  'apple', 'banana', 'cherry', 'date', 'elderberry', 'fig', 'grape', 'honeydew', 'kiwi', 'lemon',
-  'mango', 'nectarine', 'orange', 'pear', 'plum', 'quince', 'raspberry', 'strawberry', 'tangerine', 'watermelon'
+  'algorithm', 'binary', 'cache', 'debug', 'encryption', 'firewall', 'gateway', 'hash', 'iteration', 'kernel',
+  'loop', 'middleware', 'network', 'overflow', 'protocol', 'query', 'recursion', 'syntax', 'thread', 'virtualization'
 ];
 
-// Function to generate a random string of words
+// Generate random words
 function generateRandomWords() {
-  const randomWordsCount = 5;  // Number of words to display
+  const wordCount = 5;
   let randomText = '';
-  
-  for (let i = 0; i < randomWordsCount; i++) {
+
+  for (let i = 0; i < wordCount; i++) {
     const randomWord = words[Math.floor(Math.random() * words.length)];
     randomText += randomWord + ' ';
   }
-  
+
   return randomText.trim();
 }
 
-// Display random words
-textDisplay.textContent = generateRandomWords();
-console.log(generateRandomWords());
+// Display the random text
+function initializePractice() {
+  textDisplay.textContent = generateRandomWords();
+  inputText.value = '';
+  feedback.textContent = '';
+}
 
-inputText.addEventListener('input', () => {
-  const currentText = textDisplay.textContent;
-  const userInput = inputText.value;
+// Check the user's input
+function checkInput() {
+  const originalText = textDisplay.textContent.split(' ');
+  const userInput = inputText.value.trim().split(' ');
 
-  // Check if input matches the displayed text
-  if (userInput === currentText) {
-    status.textContent = 'Correct! Great job!';
-    status.style.color = 'green';
-  } else if (currentText.startsWith(userInput)) {
-    status.textContent = 'Keep typing...';
-    status.style.color = 'black';
-  } else {
-    status.textContent = 'Oops! Try again!';
-    status.style.color = 'red';
+  // Clear feedback
+  feedback.textContent = '';
+
+  // Check each word and highlight incorrect ones
+  let isCorrect = true;
+  const highlightedText = originalText.map((word, index) => {
+    if (userInput[index] === word) {
+      return `<span class='correct'>${word}</span>`;
+    } else {
+      isCorrect = false;
+      return `<span class='incorrect'>${word}</span>`;
+    }
+  }).join(' ');
+
+  // Display results
+  textDisplay.innerHTML = highlightedText;
+  feedback.textContent = isCorrect ? '100% Correct!' : 'Keep practicing!';
+  feedback.className = isCorrect ? 'correct' : 'incorrect';
+
+  if (isCorrect) {
+    initializePractice(); // Reset for new practice
   }
-});
+}
+
+// Initialize the practice on load
+initializePractice();
+
+// Add event listener to the button
+submitButton.addEventListener('click', checkInput);
