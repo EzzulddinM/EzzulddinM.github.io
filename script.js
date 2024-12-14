@@ -23,6 +23,7 @@ function generateRandomWords() {
 
 // Display random words
 textDisplay.textContent = generateRandomWords();
+console.log(generateRandomWords());
 
 inputText.addEventListener('input', () => {
   const currentText = textDisplay.textContent;
